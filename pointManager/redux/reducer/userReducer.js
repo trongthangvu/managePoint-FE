@@ -1,8 +1,8 @@
 import { userInforLocal } from "../../services/local.service";
-import { SET_LOGIN } from "../constants/userConstants";
+import { SET_LOGIN } from "../constants/userConstant";
 
 const initialState = {
-  userInfor: userInforLocal.get(),
+  userInfor: null,
 };
 
 export let userReducer = (state = initialState, { type, payload }) => {

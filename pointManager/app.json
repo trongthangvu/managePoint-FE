@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "pointManager",
+    "displayName": "Point Manager",
     "slug": "pointManager",
     "version": "1.0.0",
     "orientation": "portrait",

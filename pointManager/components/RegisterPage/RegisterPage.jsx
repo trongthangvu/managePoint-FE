@@ -13,6 +13,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import * as ImagePicker from "expo-image-picker";
 import { userServ } from "../../services/user.service";
+import { useNavigation } from "@react-navigation/native";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
@@ -23,16 +24,14 @@ const RegisterPage = () => {
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
   const [imageUri, setImageUri] = useState("");
+  const navigation = useNavigation();
+
   const data = [
-    { label: "Item 1", value: "1" },
-    { label: "Item 2", value: "2" },
-    { label: "Item 3", value: "3" },
-    { label: "Item 4", value: "4" },
-    { label: "Item 5", value: "5" },
-    { label: "Item 6", value: "6" },
-    { label: "Item 7", value: "7" },
-    { label: "Item 8", value: "8" },
+    { label: "admin", value: "1" },
+    { label: "Giảng viên", value: "2" },
+    { label: "Học sinh", value: "3" },
   ];
+  console.log("avatar", avatar);
   const renderLabel = () => {
     if (value || isFocus) {
       return (
@@ -63,13 +62,13 @@ const RegisterPage = () => {
         username: name,
         email: email,
         password: password,
-        // confirmPassword: confirmPassword,
-        // role: value,
-        avatar: avatar,
+        role: value,
+        if(avatar) {
+          dataRegister.avatar = avatar;
+        },
       };
       const response = await userServ.postRegister(dataRegister);
-      console.log("Response from server:", response.data);
-      // Xử lý phản hồi từ server ở đây
+      navigation.navigate("Home");
     } catch (error) {
       console.error("Error:", error);
       // Xử lý lỗi ở đây
@@ -150,7 +149,13 @@ const RegisterPage = () => {
         onPress={registerUser}
       />
       {avatar && (
-        <Image source={{ uri: avatar }} style={{ width: 200, height: 200 }} />
+        <Image
+          source={{ uri: avatar }}
+          style={[
+            styles.image,
+            { justifyContent: "center", alignItems: "center" },
+          ]}
+        />
       )}
     </View>
   );
@@ -188,6 +193,14 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 5,
+  },
+  image: {
+    width: 200,
+    height: 200,
+    marginLeft: 90,
+    marginTop: 20,
+    justifyContent: "center",
+    alignItems: "center",
   },
   label: {
     position: "absolute",
