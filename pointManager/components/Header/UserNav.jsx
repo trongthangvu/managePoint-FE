@@ -1,27 +1,21 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Button } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserContext } from "../UserContext/UserContext";
 
-const UserNav = ({ isLoggedIn, userData }) => {
+const UserNav = () => {
   const navigation = useNavigation();
-  console.log("isLoggedIn", isLoggedIn);
-  console.log("userData", userData);
+  const { userData, logout } = useContext(UserContext);
 
   const handleLogout = async () => {
-    try {
-      await AsyncStorage.removeItem("access_token");
-      await AsyncStorage.removeItem("user_data");
-      navigation.navigate("Login");
-    } catch (error) {
-      console.error("Lỗi khi đăng xuất:", error);
-    }
+    await logout();
+    navigation.navigate("Login");
   };
 
   return (
     <View style={styles.container}>
-      {isLoggedIn && userData ? (
+      {userData ? (
         <View>
           <View style={styles.userInfoContainer}>
             <Text style={styles.userInfoText}>
@@ -47,7 +41,7 @@ const UserNav = ({ isLoggedIn, userData }) => {
           )}
           <Button
             title="Diễn đàn"
-            buttonStyle={styles.gradesButton}
+            buttonStyle={styles.gradesButtonForum}
             onPress={() => navigation.navigate("ForumComments")}
           />
           <Button
@@ -104,6 +98,9 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
+  },
+  gradesButtonForum: {
+    backgroundColor: "#28a745",
   },
   loginButton: {
     width: 120,

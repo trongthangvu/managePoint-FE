@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Button, Input, Icon } from "react-native-elements";
 import { userServ } from "../../services/user.service";
@@ -7,6 +7,7 @@ import { https } from "../../services/urlConfig";
 import { setUser } from "../../redux/action/userAction";
 import { useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
+import { userInforLocal } from "../../services/local.service";
 
 const LoginPage = () => {
   const [name, setName] = useState("");
@@ -29,13 +30,9 @@ const LoginPage = () => {
         "Bearer " + response.data.access_token;
       const { access_token } = response.data;
       await AsyncStorage.setItem("access_token", access_token);
-      const userResponse = await https.get("/point/api/users/current-user/");
+      const userResponse = await https.get("/users/current-user/");
       if (userResponse.data) {
-        await AsyncStorage.setItem(
-          "user_data",
-          JSON.stringify(userResponse.data)
-        );
-
+        await userInforLocal.set(userResponse.data);
         navigation.navigate("Home");
       }
     } catch (error) {
@@ -43,7 +40,14 @@ const LoginPage = () => {
       setError("Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau.");
     }
   };
-
+  // useEffect(() => {
+  //   let userInfor = userInforLocal.get();
+  //   console.log("userInfor", userInfor);
+  //   // if (userInfor) {
+  //   //   navigation.navigate("");
+  //   // }
+  //   // kiểm tra nếu user đã đăng nhập thì chuyển hướng về trang chủ
+  // }, []);
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Đăng nhập</Text>

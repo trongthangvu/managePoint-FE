@@ -2,7 +2,7 @@ import { https } from "./urlConfig";
 
 export const userServ = {
   postRegister: (dataRegister) => {
-    let uri = "/point/api/users/";
+    let uri = "/users/";
     return https.post(uri, dataRegister);
   },
   postLogin: (dataLogin) => {
